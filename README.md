@@ -1,3 +1,3 @@
-# scotus
+# Supreme Court Utterance Classification (SCotUs)
 
-CS6140 - Natural Language Processing course project
+CS6120 - Natural Language Processing Course Project

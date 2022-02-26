@@ -1,0 +1,1 @@
+jupyter nbconvert ./notebooks/report.ipynb --to latex
