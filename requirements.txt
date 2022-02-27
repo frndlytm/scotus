@@ -1,4 +1,13 @@
+# Bsae packages
 convokit
 jupyter
 nltk
 sklearn
+
+# Testing requirements
+black
+jupytext
+pytest-subtests
+pytest
+ipytest
+isort
