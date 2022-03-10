@@ -1,2 +1,4 @@
 *.egg-info
+*.synctex.gz
 .venv
+desktop.ini
