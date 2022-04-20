@@ -1,0 +1,22 @@
+[0] Config.pm:311> INFO - This is Biber 2.16
+[10] Config.pm:314> INFO - Logfile is 'document.blg'
+[239] biber-MSWIN32:340> INFO - === 
+[536] Biber.pm:415> INFO - Reading 'document.bcf'
+[1116] Biber.pm:949> INFO - Using all citekeys in bib section 0
+[1159] Biber.pm:4340> INFO - Processing section 0
+[1194] Biber.pm:4531> INFO - Looking for bibtex format file './citations/arXiv-1103.0398v1.bib' for section 0
+[1487] bibtex.pm:1689> INFO - LaTeX decoding ...
+[1495] bibtex.pm:1494> INFO - Found BibTeX data source './citations/arXiv-1103.0398v1.bib'
+[1554] Biber.pm:4531> INFO - Looking for bibtex format file './citations/arXiv-1408.5882v2.bib' for section 0
+[1840] bibtex.pm:1689> INFO - LaTeX decoding ...
+[1852] bibtex.pm:1494> INFO - Found BibTeX data source './citations/arXiv-1408.5882v2.bib'
+[1866] Biber.pm:4531> INFO - Looking for bibtex format file './citations/arXiv-1811.00405.bib' for section 0
+[2247] bibtex.pm:1689> INFO - LaTeX decoding ...
+[2258] bibtex.pm:1494> INFO - Found BibTeX data source './citations/arXiv-1811.00405.bib'
+[2310] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'level = 4' with 'level = 2'
+[2311] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[2312] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[2312] Biber.pm:4168> INFO - Sorting list 'cms/global//global/global' of type 'entry' with template 'cms' and locale 'en-US'
+[2313] Biber.pm:4174> INFO - No sort tailoring available for locale 'en-US'
+[2336] bbl.pm:654> INFO - Writing 'document.bbl' with encoding 'UTF-8'
+[2349] bbl.pm:757> INFO - Output to document.bbl

@@ -1,0 +1,177 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{cms/global//global/global}
+    \entry{DBLP:journals/corr/abs-1103-0398}{article}{}
+      \name{author}{6}{}{%
+        {{hash=133261178beda1dc3991e0e1dfd5a791}{%
+           family={Collobert},
+           familyi={C\bibinitperiod},
+           given={Ronan},
+           giveni={R\bibinitperiod}}}%
+        {{hash=417a25f3511d7c21e76d4a15e67dd679}{%
+           family={Weston},
+           familyi={W\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod}}}%
+        {{hash=ac762f2592005edf6bad58f566967c6c}{%
+           family={Bottou},
+           familyi={B\bibinitperiod},
+           given={Léon},
+           giveni={L\bibinitperiod}}}%
+        {{hash=7db9458d121085904e6496ca5d82977a}{%
+           family={Karlen},
+           familyi={K\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=481308b301166b521c74fde6566e97e6}{%
+           family={Kavukcuoglu},
+           familyi={K\bibinitperiod},
+           given={Koray},
+           giveni={K\bibinitperiod}}}%
+        {{hash=b504174b46ee1bfed8649fc9c263efff}{%
+           family={Kuksa},
+           familyi={K\bibinitperiod},
+           given={Pavel\bibnamedelima P.},
+           giveni={P\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \strng{namehash}{d12381cfb1e47a6c365b9375e84171c5}
+      \strng{fullhash}{a51ce1415ff89d8059c0be25619606af}
+      \strng{bibnamehash}{a51ce1415ff89d8059c0be25619606af}
+      \strng{authorbibnamehash}{a51ce1415ff89d8059c0be25619606af}
+      \strng{authornamehash}{d12381cfb1e47a6c365b9375e84171c5}
+      \strng{authorfullhash}{a51ce1415ff89d8059c0be25619606af}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{CoRR}
+      \field{title}{Natural Language Processing (almost) from Scratch}
+      \field{volume}{abs/1103.0398}
+      \field{year}{2011}
+      \true{nocite}
+      \verb{eprint}
+      \verb 1103.0398
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/1103.0398
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/1103.0398
+      \endverb
+    \endentry
+    \entry{DBLP:journals/corr/Kim14f}{article}{}
+      \name{author}{1}{}{%
+        {{hash=1fecefbf07117382be6f83e7910ea8a0}{%
+           family={Kim},
+           familyi={K\bibinitperiod},
+           given={Yoon},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{1fecefbf07117382be6f83e7910ea8a0}
+      \strng{fullhash}{1fecefbf07117382be6f83e7910ea8a0}
+      \strng{bibnamehash}{1fecefbf07117382be6f83e7910ea8a0}
+      \strng{authorbibnamehash}{1fecefbf07117382be6f83e7910ea8a0}
+      \strng{authornamehash}{1fecefbf07117382be6f83e7910ea8a0}
+      \strng{authorfullhash}{1fecefbf07117382be6f83e7910ea8a0}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{CoRR}
+      \field{title}{Convolutional Neural Networks for Sentence Classification}
+      \field{volume}{abs/1408.5882}
+      \field{year}{2014}
+      \true{nocite}
+      \verb{eprint}
+      \verb 1408.5882
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/1408.5882
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/1408.5882
+      \endverb
+    \endentry
+    \entry{DBLP:journals/corr/abs-1811-00405}{article}{}
+      \name{author}{6}{}{%
+        {{hash=c5b5720fc3c1a1b3767147891945c525}{%
+           family={Majumder},
+           familyi={M\bibinitperiod},
+           given={Navonil},
+           giveni={N\bibinitperiod}}}%
+        {{hash=dcb98c96536530f44ae8cf4f6a8f2d86}{%
+           family={Poria},
+           familyi={P\bibinitperiod},
+           given={Soujanya},
+           giveni={S\bibinitperiod}}}%
+        {{hash=14227e7438bb27d316977ef756c347ba}{%
+           family={Hazarika},
+           familyi={H\bibinitperiod},
+           given={Devamanyu},
+           giveni={D\bibinitperiod}}}%
+        {{hash=7147443179f5f0b00a44986a0f561f4d}{%
+           family={Mihalcea},
+           familyi={M\bibinitperiod},
+           given={Rada},
+           giveni={R\bibinitperiod}}}%
+        {{hash=b4a4e31738f492d9283f086292b63c0c}{%
+           family={Gelbukh},
+           familyi={G\bibinitperiod},
+           given={Alexander\bibnamedelima F.},
+           giveni={A\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+        {{hash=db089768b8819956d932b3c8db18d498}{%
+           family={Cambria},
+           familyi={C\bibinitperiod},
+           given={Erik},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{4f5b77907cb06449df322ca337dcf1de}
+      \strng{fullhash}{e58aff59f5c907ab62c3319944ce97f9}
+      \strng{bibnamehash}{e58aff59f5c907ab62c3319944ce97f9}
+      \strng{authorbibnamehash}{e58aff59f5c907ab62c3319944ce97f9}
+      \strng{authornamehash}{4f5b77907cb06449df322ca337dcf1de}
+      \strng{authorfullhash}{e58aff59f5c907ab62c3319944ce97f9}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{CoRR}
+      \field{title}{DialogueRNN: An Attentive {RNN} for Emotion Detection in Conversations}
+      \field{volume}{abs/1811.00405}
+      \field{year}{2018}
+      \true{nocite}
+      \verb{eprint}
+      \verb 1811.00405
+      \endverb
+      \verb{urlraw}
+      \verb http://arxiv.org/abs/1811.00405
+      \endverb
+      \verb{url}
+      \verb http://arxiv.org/abs/1811.00405
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
