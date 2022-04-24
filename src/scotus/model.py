@@ -203,7 +203,7 @@ class DialgueRNN(torch.nn.Module):
         # Upadte the global context with the new utterance
         context_last = self.global_context.now()
         context_next = self.global_gru(utter, context_last)
-        self.global_context(context_next)
+        self.global_context(context_next)  # forward
 
         # Allow each party to handle the utterance and emit an `emotion` tensor
         out = torch.empty(self.d_emotion)
