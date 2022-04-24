@@ -200,6 +200,11 @@ class DialgueRNN(torch.nn.Module):
         self.set_conversation(conversation)
         speaker_ = self.parties[torch.argmax(speaker)]
 
+        # Upadte the global context with the new utterance
+        context_last = self.global_context.now()
+        context_next = self.global_gru(utter, context_last)
+        self.global_context(context_next)
+
         # Allow each party to handle the utterance and emit an `emotion` tensor
         out = torch.empty(self.d_emotion)
         for name, converse in self.conversationalists.items():
