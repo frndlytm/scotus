@@ -1,216 +1,149 @@
-
-from typing import Callable
-
 import torch
-import torch.nn.funtional as F
-from torch import nn
+import torch.nn as nn
+from torch.nn import functional as F, init
 
 
-
-# TODO:
-#     TITLE: CNN For Sentence Embedding for Utterances
-#     AUTHOR: frndlytm
-class MaxOverTimePooling(nn.Module):
-    def forward(self, x):
-        return nn.max
-
-
-class CNNSentenceClassifier(nn.Module):
-    def __init__(self, k_width: int, *h_windows: int):
-        super().__init__()
-        self.k_width = k_width
-        self.embeddings = nn.Embedding(...)
-        self.convolution = nn.ModuleList([
-            nn.Conv1D(h_window) for h_window in h_windows
-        ])
-        self.max_over_time = nn.MaxPool1d(...)
-
-    def forward(self, utterance):
-        """
-        Given an input sentence, x, a CNNSentenceClassifier convolves the
-        word vectors into channels by context h_windows.
-        """
-        embedded = self.embedding(utterance)
-        xs = self.convolution(embedded)
-
-
-# Vanilla RNN Implementation
-class RNN(nn.Module):
+class SharedHistory(nn.Module):
     """
-    Reference:
-        https://stanford.edu/~shervine/teaching/cs-230/cheatsheet-recurrent-neural-networks
+    A SharedHistory is a Tensor-wrapper module that updates by
+    rolling out the oldest memory and concatenating the newest
+    memory on the end.
     """
+    def __init__(self, tensor: torch.Tensor):
+        self.history = nn.Parameter(tensor, requires_grad=False)
+
+    def forward(self, next_: torch.Tensor):
+        self.history = torch.concat(self.history[:-1], next_)
+
+
+class SimpleAttention(nn.Module):
+    def __init__(self, d_utter, context: nn.Parameter):
+        self.d_utter = d_utter
+        self.d_context = context.size(0)
+        self.d_attention = context.size(1) - 1
+
+        self.alpha = nn.Parameter(torch.ones(self.d_attention))
+        self.W_alpha = nn.Parameter(torch.empty(self.d_utter, self.d_global))
+        self.context = context
+
+    def init_weights(self):
+        init.xavier_uniform_(
+            self.W_alpha, gain=(
+                (self.d_utter + self.d_global)
+                / torch.abs(self.dutter - self.d_globa)
+            )
+        )
+
+    def forward(self, utter: torch.Tensor) -> torch.Tensor:
+        history = self.context.state[:, :-1]
+        self.alpha = F.softmax(utter @ self.W_alpha @ history)
+        return self.alpha @ history
+
+
+class Conversationalist(nn.Module):
     def __init__(
         self,
-        d_in: int,
-        d_hidden: int,
-        d_out: int,
-        act_hidden: Callable = F.sigmoid,
-        act_out: Callable = F.sigmoid,
-    ):
-        self.act_hiddem = act_hidden
-        self.act_out = act_out
-
-        # Learned weight parameters
-        self.W_ax, self.W_aa, self.W_ya = (
-            nn.Parameter(torch.zeros(d_hidden, d_in)),
-            nn.Parameter(torch.ones(d_hidden, d_hidden)),
-            nn.Parameter(torch.normal(d_out, d_hidden)),
-        )
-
-        # Static bias parameters
-        self.b_a, self.b_y = (
-            nn.Parameter(torch.ones(d_hidden), requires_grad=False),
-            nn.Parameter(torch.ones(d_hidden), requires_grad=False),
-        )
-
-        # Stored context tensor
-        self.hidden = nn.Parameter(torch.zeros(d_hidden), requires_grad=False)
-
-    def forward(self, x: torch.tensor):
-        # Update the attention/contex hidden vector with the new word
-        self.hidden = self.act_hidden(
-            (self.W_aa @ self.hidden)
-            + (self.W_ax @ x)
-            + self.b_a
-        )
-        y = self.act_out(self.W_ya @ self.hidden + self.b_y)
-        return y
-
-
-
-class Gate(nn.Module):
-    def __init__(self, d_in: int, d_hidden: int, act: Callable = F.sigmoid):
-        self.W, self.U, self.b = (
-            nn.Parameter(torch.uniform((d_in, d_hidden))),
-            nn.Parameter(torch.uniform((d_hidden, d_hidden))),
-            nn.Parameter(torch.ones(d_hidden, requires_grad=False))
-        )
-        self.act = act
-
-    def forward(self, x: torch.tensor, h: torch.tensor) -> torch.tensor:
-        return self.act((self.W @ x) + (self.U @ h) + self.b)
-
-
-class GRU(RNN):
-    """
-    A GatedRecurrentUnit (GRU) uses two Gate modules, activated with
-    sigmoids, to maintain relevance and decide which information from
-    history is important to making a decision in the current time step.
-
-    Reference:
-        https://towardsdatascience.com/understanding-gru-networks-2ef37df6c9be
-
-    """
-    def __init__(
-        self,
-        d_in: int,
-        d_hidden: int,
-        d_out: int,
-        act: Callable = F.tanh,
-        act_upd: Callable = F.sigmoid,
-        act_rel: Callable = F.sigmoid,
-    ):
-        # Initialize standard recurrent parameters
-        super().__init__(d_in, d_hidden, d_out, act)
-
-        # Construct gates
-        self.update_gate = Gate(d_in, d_hidden, act=act_upd)
-        self.reset_gate = Gate(d_in, d_hidden, act=act_rel)
-
-        self.update, self.reset = (
-            nn.Parameter(torch.full((d_out,), torch.nan), requires_grad=False),
-            nn.Parameter(torch.full((d_out,), torch.nan), requires_grad=False),
-        )
-
-    def forward(self, x: torch.tensor) -> torch.tensor:
-        # Roll the gated vectors forward a time step so we can update history
-        self.update = self.update_gate(x, self.hidden)
-        self.reset = self.reset_gate(x, self.hidden)
-
-        # Roll the history forward using the reset gate, and trade off between
-        # the update gate
-        hidden = self.act((self.W @ x) + (self.reset * (self.U @ self.hidden)))
-        self.hidden = (
-            (self.update * hidden) + ((1 - self.update) * self.hidden)
-        )
-        y = super().forward(x)
-        return y
-
-
-# TODO:
-#     TITLE: SpeakerUpdate GRU from Paper
-#     AUTHOR: frndlytm
-class SpeakerSubmodule(GRU):
-    def __init__(
-        self,
-        name: str,
-        d_global: int,
+        d_state: int,
+        d_context: int,
         d_utter: int,
-        d_history: int,
+        d_emotion: int,
+        name: str,
+        context: nn.Module,
     ):
+        # Shape
+        self.d_state = d_state
+        self.d_context = d_context
+        self.d_utter = d_utter
+        self.d_emotion = d_emotion
+
+        # Conversationalist
         self.name = name
-        self.emotion = GRU(...)
-        self.history = GRU(...)
+        self.context = context
+        self.attention = SimpleAttention(d_utter, context)
 
-        self.alpha = nn.Parameter(torch.ones(d_history), requires_grad=False)
-        self.context = nn.Parameter(torch.zeros(d_global), requires_grad=False)
-        self.W_alpha = nn.Parameter(torch.normal((d_utter, d_global)))
-        super().__init__(...)
+        self.state = nn.Parameter(torch.zeros(d_state), requires_grad=False)
+        self.emotion = nn.Parameter(torch.zeros(d_emotion), requires_grad=False)
+        self.emote = nn.GRU(d_emotion, d_state)
 
-    def forward(
-        self,
-        utter: torch.tensor,
-        previous_state: torch.tensor,
-        global_history: torch.tensor
-    ):
-        self.alpha = F.softmax(utter @ self.W_alpha @ global_history)
-        self.context = self.alpha @ global_history.T
-        return super().forward(
-            previous_state, torch.concat(utter, self.context)
-        )
+        # Roles
+        self.as_speaker = nn.GRU(d_state, d_utter + d_context)
+        self.as_listener = nn.GRU(d_state, d_utter + d_context)
+
+    def listen(self, utter: torch.Tensor, context: torch.Tensor):
+        """listen(...) updates the conversationalist internal state by the utter
+        and the current global context as if they spoke it."""
+        self.state = self.as_listener(self.state, torch.concat(utter, context))
+
+    def speak(self, utter: torch.Tensor, context: torch.Tensor):
+        """speak(...) updates the conversationalist internal state by the utter
+        and the current global context as if they spoke it."""
+        self.state = self.as_speaker(self.state, torch.concat(utter, context))
+
+    def forward(self, speaker: str, utter: torch.Tensor) -> torch.Tensor:
+        """forward through the conversation, receives the speaker and its
+        utterance to update the current state, and emit an emotion"""
+        context = self.context.history[-1]
+        if self.name == speaker:
+            self.speak(utter, context)
+        else:
+            self.listen(utter, context)
+
+        self.emotion = self.emote(self.emotion, self.state)
+        return self.emotion
 
 
-class DialgueRNN(nn.Module):
+class DialgueRNN(torch.nn.Module):
     def __init__(
         self,
         parties: set[str],
-        d_global: int,
         d_party: int,
         d_utter: int,
-        d_history: int,
+        d_emotion: int,
+        d_context: int,
+        d_attention: int,
     ):
-        # Track the state of who's talking and who's listening
-        self.channels = len(parties)
-        self.is_speaker = torch.zeros(self.channels)
-
-        # Configure parties' individual hidden contexts
-        self.party = {p: i for i, p in enumerate(parties)}
-        self.party_state = nn.Parameter(torch.zeros(self.channels, d_party))
-        self.party_grus = torch.ModuleList([
-            SpeakerSubmodule(name, d_global, d_utter, d_history)
-            for name in parties
-        ])
+        self.d_party = d_party
+        self.d_utter = d_utter
+        self.d_emotion = d_emotion
+        self.d_context = d_context
+        self.d_attention = d_attention
 
         # Configure global conversation state module and an empty history
-        # of size d_history
-        self.global_gru = GRU(d_global, d_history)
-        self.global_history = torch.zeros((d_history, d_global))
+        # of size d_history representing how many utterances we want to
+        # pay long-term attention to.
+        self.global_gru = nn.GRU(d_utter, d_context)
+        self.global_context = SharedHistory(torch.zeros(d_context, d_attention))
 
-    @property
-    def is_listener(self):
-        return 1 - self.is_speaker
+        # Track the state of who's talking and who's listening
+        # in independent Conversationalists
+        self.parties = torch.nn.ModuleDict({
+            name: Conversationalist(
+                d_party=d_party,
+                d_utter=d_utter,
+                d_context=d_context,
+                name=name,
+                context=self.global_context,
+            )
+            for name in parties
+        })
 
-    def set_speaker(self, speaker):
-        # reset the speakers tensor to 0's
-        self.is_speakers = torch.zeros_like(self.is_speakers)
+    def forward(self, speaker: str, utter: torch.tensor):
+        """
+        Returns
+        -------
+            torch.Tensor
+                The stacked emotion predictions of each Conversationalist
+                in the dialogue
+        """
+        out = torch.empty(self.d_emotion)
 
-        # set the current active speaker using the participants index
-        i = self.participants[speaker]
-        self.is_speakers[i] = 1
+        # Allow each party to handle the utterance
+        for name, party in self.parties.items():
+            emotion = party(speaker, utter)
 
-    def forward(self, speaker: str, utterance: torch.tensor):
-        self.set_speaker(speaker)
-        # TODO:
-        #     TITLE: DialogueRNN forward
-        #     AUTHOR: frndlytm
+            # Copy the speaker's emotion to the output
+            if speaker == name:
+                out.copy_(emotion)
+
+        # RETURN
+        return out
