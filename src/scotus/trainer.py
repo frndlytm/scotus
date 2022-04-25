@@ -23,7 +23,7 @@ from ignite.metrics import (
 )
 
 # from vibr import constants
-import src.vibr.constants as constants
+from . import constants
 
 
 def classify_at_threshold(
@@ -35,7 +35,7 @@ def classify_at_threshold(
     return (activate(y_pred) >= threshold).float(), y_true
 
 
-# Make a trainer 
+# Make a trainer
 def configure(
     model,
     optimizer,
